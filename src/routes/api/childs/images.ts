@@ -14,7 +14,7 @@ const convertImage = async (
   height: number,
   imageName: string,
   ext?: string
-) => {
+): Promise<unknown> => {
   try {
     const readFile = async (): Promise<unknown> => {
       const myFile = await fs.readFile(
