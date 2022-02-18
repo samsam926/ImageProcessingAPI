@@ -4,19 +4,8 @@ import route from './routes/api';
 const app = express();
 const port = 5000;
 
-// Middleware
-const logger = (
-  req: express.Request,
-  res: express.Response,
-  next: Function
-): void => {
-  let url = req.url;
-  console.log(`${url} was visited`);
-  next();
-};
-
 // routes
-app.use('/api', logger, route);
+app.use('/api', route);
 
 //set endpoint
 app.get('/', (req, res) => {
@@ -24,6 +13,6 @@ app.get('/', (req, res) => {
 });
 
 // check port to avoid already using
-app.listen(port, () => console.log('Listening on' + port));
+app.listen(port, () => console.log('Listening on http://localhost:' + port));
 
 export default app;
