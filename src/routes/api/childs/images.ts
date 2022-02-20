@@ -1,75 +1,47 @@
 import express from 'express';
-import { Sharp as SharpInterface } from 'sharp';
 import { ImagesRequest } from '../../../types/image';
+import convertImage from '../../../utilites/imageProcessing';
 
 // constants
 const images = express.Router();
-const sharp = require('sharp');
 const path = require('path');
-const fs = require('fs/promises');
-
-// Convert Image Function
-const convertImage = async (
-  width: number,
-  height: number,
-  imageName: string,
-  ext?: string
-): Promise<unknown> => {
-  try {
-    const readFile = async (): Promise<unknown> => {
-      const myFile = await fs.readFile(
-        `src/assets/fulls/${imageName}.jpg`,
-        (data: string, err: unknown) => {
-          if (err) console.log(err);
-        }
-      );
-      return myFile;
-    };
-    if (width && height && imageName && (await readFile())) {
-      ext = ext ? ext : 'jpg';
-      const image: SharpInterface = sharp(`src/assets/fulls/${imageName}.jpg`);
-      const converting = image
-        .resize(width, height)
-        .toFile(`src/assets/thumbnails/${imageName}.${ext}`, (err: unknown) => {
-          return err;
-        });
-      return converting;
-    } else {
-      return false;
-    }
-  } catch (error) {
-    console.error(error);
-  }
-};
 
 // Convert Image Middleware
-const convertImagesReq = (
+const convertImagesReq = async (
   req: express.Request,
   res: express.Response,
   next: Function
-): void | boolean => {
+): Promise<void | boolean> => {
   const { width, height, imagename } = req.query as unknown as ImagesRequest;
   let { ext } = req.query as unknown as ImagesRequest;
-  if (width && height && imagename) {
+
+  if (width && height && imagename && !(isNaN(width) || isNaN(height))) {
     ext = ext ? ext : 'jpg';
-    convertImage(+width, +height, imagename, ext);
+    await convertImage(+width, +height, imagename, ext);
     next();
+  } else if (isNaN(width) || isNaN(height)) {
+    res.send(`${isNaN(width) ? 'width' : 'height'} is not a valid number`);
   } else {
     return next();
   }
 };
 
 // Images API
-images.get('/', convertImagesReq, (req, res) => {
-  const { width, height, imagename } = req.query as unknown as ImagesRequest;
-  let { ext } = req.query as unknown as ImagesRequest;
-  if (width && height && imagename) {
-    ext = ext ? ext : 'jpg';
-    const filepath = `src/assets/thumbnails/${imagename}.${ext}`;
-    res.sendFile(path.resolve(filepath));
-  } else {
-    res.send('missing mandatory parametars');
-  }
-});
+images.get(
+  '/',
+  convertImagesReq,
+  (req: express.Request, res: express.Response) => {
+    let { width, height, imagename, ext } =
+      req.query as unknown as ImagesRequest;
+    if (width && height && imagename) {
+      ext = ext ? ext : 'jpg';
 
-export { images, convertImage };
+      const filepath = `src/assets/thumbnails/${imagename}${height}x${width}.${ext}`;
+      res.sendFile(path.resolve(filepath));
+    } else {
+      res.send('missing mandatory parametars');
+    }
+  }
+);
+
+export default images;

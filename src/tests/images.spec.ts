@@ -1,4 +1,4 @@
-import { convertImage } from '../routes/api/childs/images';
+import convertImage from '../utilites/imageProcessing';
 
 describe('should convert input images', () => {
   it('should fail if one mandatory params not sent', async () => {

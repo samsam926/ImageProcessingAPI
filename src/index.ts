@@ -8,7 +8,7 @@ const port = 5000;
 app.use('/api', route);
 
 //set endpoint
-app.get('/', (req, res) => {
+app.get('/', (req: express.Request, res: express.Response) => {
   res.send('Hello, World.');
 });
 

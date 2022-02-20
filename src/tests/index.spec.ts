@@ -12,4 +12,10 @@ describe('Test endpoint responses', () => {
     const response = await request.get('/api/images');
     expect(response.status).toBe(200);
   });
+  it('should show the resized image', async () => {
+    const response = await request.get(
+      '/api/images?imagename=test&ext=jpg&width=200&height=200'
+    );
+    expect(response.status).toBe(200);
+  });
 });
