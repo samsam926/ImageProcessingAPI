@@ -30,7 +30,7 @@ const convertImagesReq = async (
 images.get(
   '/',
   convertImagesReq,
-  (req: express.Request, res: express.Response) => {
+  (req: express.Request, res: express.Response): void => {
     let { width, height, imagename, ext } =
       req.query as unknown as ImagesRequest;
     if (width && height && imagename) {
