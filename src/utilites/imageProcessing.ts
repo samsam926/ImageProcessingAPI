@@ -1,5 +1,5 @@
 import { Sharp as SharpInterface } from 'sharp';
-const fs = require('fs/promises');
+const fs = require('fs').promises;
 const sharp = require('sharp');
 const path = require('path');
 
@@ -25,7 +25,7 @@ const convertImage = async (
     };
     if (width && height && imageName && (await readFile())) {
       ext = ext ? ext : 'jpg';
-      const image: SharpInterface = sharp(mainPath(imageName));
+      const image: SharpInterface = await sharp(mainPath(imageName));
       const converting = image
         .resize(width, height)
         .toFile(
@@ -42,7 +42,7 @@ const convertImage = async (
       return false;
     }
   } catch (error) {
-    console.error(error);
+    return error;
   }
 };
 
