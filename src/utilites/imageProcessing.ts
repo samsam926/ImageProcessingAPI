@@ -4,7 +4,7 @@ const sharp = require('sharp');
 const path = require('path');
 
 const mainPath = (imageName: string) =>
-  path.join(__dirname, `../assets/fulls/${imageName}.jpg`);
+  path.join(__dirname, `../../assets/fulls/${imageName}.jpg`);
 
 // Convert Image Function
 const convertImage = async (
@@ -31,7 +31,7 @@ const convertImage = async (
         .toFile(
           path.join(
             __dirname,
-            `../assets/thumbnails/${imageName}${height}x${width}.${ext}`
+            `../../assets/thumbnails/${imageName}${height}x${width}.${ext}`
           ),
           (err: unknown) => {
             return err;
@@ -42,7 +42,7 @@ const convertImage = async (
       return false;
     }
   } catch (error) {
-    return error;
+    return false;
   }
 };
 

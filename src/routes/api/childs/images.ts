@@ -36,7 +36,7 @@ images.get(
     if (width && height && imagename) {
       ext = ext ? ext : 'jpg';
 
-      const filepath = `src/assets/thumbnails/${imagename}${height}x${width}.${ext}`;
+      const filepath = `assets/thumbnails/${imagename}${height}x${width}.${ext}`;
       res.sendFile(path.resolve(filepath));
     } else {
       res.send('missing mandatory parametars');
